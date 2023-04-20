@@ -1,6 +1,6 @@
-import FormSchema from '../models/formSchema';
+import Schema from '../models/schema';
 
-const schema: FormSchema[] = [
+const schema: Schema[] = [
   {
     name: 'title',
     label: 'Title',

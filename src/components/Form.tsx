@@ -3,12 +3,12 @@ import { Button, DatePicker, Form, Input, Select } from 'antd';
 import { useForm } from 'antd/es/form/Form';
 import TextArea from 'antd/es/input/TextArea';
 import DataType from '../models/dataType';
-import FormSchema from '../models/formSchema';
+import Schema from '../models/schema';
 
 interface Props {
   onClose: () => void;
   onSubmit: (values: DataType) => void;
-  formSchema: FormSchema[];
+  formSchema: Schema[];
 }
 
 const FormComponent: React.FC<Props> = ({ onClose, onSubmit, formSchema }) => {
@@ -21,9 +21,9 @@ const FormComponent: React.FC<Props> = ({ onClose, onSubmit, formSchema }) => {
   };
 
   const getFormItemComponent = (
-    component: FormSchema['component'],
-    label: FormSchema['label'],
-    options?: FormSchema['options']
+    component: Schema['component'],
+    label: Schema['label'],
+    options?: Schema['options']
   ) => {
     switch (component) {
       case 'text':

@@ -1,12 +1,9 @@
 import FormComponent from './components/Form';
-import TableComponent from './components/Table';
+import DynamicTable from './components/DynamicTable';
 import DataType from './models/dataType';
 import schema from './schemas/formSchema';
-import useFetchData from './api/useFetchData';
 
 function App() {
-  const { data, isLoading, error } = useFetchData();
-
   const closeHandler = () => {
     console.log('FORM CLOSED!');
   };
@@ -17,18 +14,6 @@ function App() {
     );
   };
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
-  if (error) {
-    return <div>Error: {error.message}</div>;
-  }
-
-  if(data?.length === 0) {
-    return <div>Nothing data</div>;
-  }
-
   return (
     <>
       <FormComponent
@@ -36,7 +21,7 @@ function App() {
         onSubmit={submitHandler}
         formSchema={schema}
       />
-      <TableComponent schema={schema} dataSource={data!} />
+      <DynamicTable schema={schema} />
     </>
   );
 }
