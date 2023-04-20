@@ -1,4 +1,4 @@
-export default interface Schema {
+export default interface SchemaField {
   name: string | string[];
   label: string;
   component: 'text' | 'select' | 'range_picker' | 'textarea';

@@ -1,18 +1,16 @@
 import React from 'react';
 import { Table } from 'antd';
 import { ColumnType } from 'antd/lib/table';
-import useFetchData from '../api/useFetchData';
-import Schema from '../models/schema';
+import SchemaField from '../models/SchemaField';
 import { formatLabel } from '../utils/formatLabel';
+import DataType from '../models/dataType';
 
 interface Props {
-  schema: Schema[];
+  schema: SchemaField[];
+  dataSource: DataType[];
 }
 
-const DynamicTable: React.FC<Props> = ({ schema }) => {
-  // Fetch data using the custom data fetching hook
-  const { data, isLoading, error } = useFetchData();
-
+const DynamicTable: React.FC<Props> = ({ schema, dataSource }) => {
   // Generate table columns based on the provided schema
   const columns: ColumnType<any>[] = schema.flatMap((field) => {
     if (Array.isArray(field.name)) {
@@ -30,15 +28,7 @@ const DynamicTable: React.FC<Props> = ({ schema }) => {
     };
   });
 
-  if (error) {
-    return <div>Error: {error.message}</div>;
-  }
-
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
-  return <Table dataSource={data} columns={columns} rowKey='id' />;
+  return <Table dataSource={dataSource} columns={columns} rowKey='id' />;
 };
 
 export default DynamicTable;

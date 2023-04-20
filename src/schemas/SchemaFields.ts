@@ -1,6 +1,6 @@
-import Schema from '../models/schema';
+import SchemaField from '../models/SchemaField';
 
-const schema: Schema[] = [
+const SchemaFields: SchemaField[] = [
   {
     name: 'title',
     label: 'Title',
@@ -37,4 +37,4 @@ const schema: Schema[] = [
   },
 ];
 
-export default schema;
+export default SchemaFields;
