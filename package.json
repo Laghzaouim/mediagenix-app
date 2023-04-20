@@ -12,7 +12,6 @@
     "@types/react-dom": "^18.0.11",
     "antd": "^5.4.3",
     "moment": "^2.29.4",
-    "msw": "^1.2.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-query": "^3.39.3",
@@ -24,7 +23,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "msw:init": "npx msw init public/"
   },
   "eslintConfig": {
     "extends": [
@@ -43,5 +43,11 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "msw": "^1.2.1"
+  },
+  "msw": {
+    "workerDirectory": "public"
   }
 }

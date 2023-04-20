@@ -1,18 +1,18 @@
 import React from 'react';
 import { Table } from 'antd';
 import moment from 'moment';
-import TableSchema from '../models/tableSchema';
 import { ColumnsType } from 'antd/es/table';
 import FormSchema from '../models/formSchema';
+import DataType from '../models/dataType';
 
 interface TableComponentProps {
-  dataSource: TableSchema[];
+  dataSource: DataType[];
   schema: FormSchema[];
 }
 
 const TableComponent: React.FC<TableComponentProps> = React.memo(
   ({ dataSource, schema }) => {
-    const columns: ColumnsType<TableSchema> = schema.flatMap(
+    const columns: ColumnsType<DataType> = schema.flatMap(
       ({ label, name }) => {
         if (label === 'Date' && Array.isArray(name)) {
           // If this is a "Date" column with a name array, create two columns for the start and end dates

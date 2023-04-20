@@ -1,39 +1,33 @@
-import moment from 'moment';
 import FormComponent from './components/Form';
 import TableComponent from './components/Table';
-import FormValues from './models/formValues';
-import TableSchema from './models/tableSchema';
+import DataType from './models/dataType';
 import schema from './schemas/formSchema';
-
-const data: TableSchema[] = [
-  {
-    id: '1',
-    title: 'Start of the year',
-    type: 'generic',
-    startDate: moment('2022-01-01', ' YYYY-MM-DD'), //format in YYYY-MM-DD
-    endDate: moment('2022-12-01', ' YYYY-MM-DD'), //format in YYYY-MM-DD
-    description: 'This is an event about the start of this year',
-  },
-  {
-    id: '2',
-    title: 'Mediagenix holiday',
-    type: 'holiday',
-    startDate: moment('2022-04-04', 'YYYY-MM-DD'), //format in YYYY-MM-DD
-    endDate: moment('2022-04-05', 'YYYY-MM-DD'), //format in YYYY-MM-DD
-    description: 'Celebrating Mediagenix',
-  },
-];
+import useFetchData from './api/useFetchData';
 
 function App() {
+  const { data, isLoading, error } = useFetchData();
+
   const closeHandler = () => {
     console.log('FORM CLOSED!');
   };
-  const submitHandler = (fromValues: FormValues) => {
+  const submitHandler = (fromValues: DataType) => {
     console.log(
       '🚀 ~ file: App.tsx:10 ~ submitHandler ~ fromValues:',
       fromValues
     );
   };
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error.message}</div>;
+  }
+
+  if(data?.length === 0) {
+    return <div>Nothing data</div>;
+  }
 
   return (
     <>
@@ -42,7 +36,7 @@ function App() {
         onSubmit={submitHandler}
         formSchema={schema}
       />
-      <TableComponent schema={schema} dataSource={data} />
+      <TableComponent schema={schema} dataSource={data!} />
     </>
   );
 }

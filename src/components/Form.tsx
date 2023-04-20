@@ -2,19 +2,19 @@ import React from 'react';
 import { Button, DatePicker, Form, Input, Select } from 'antd';
 import { useForm } from 'antd/es/form/Form';
 import TextArea from 'antd/es/input/TextArea';
-import FormValues from '../models/formValues';
+import DataType from '../models/dataType';
 import FormSchema from '../models/formSchema';
 
 interface Props {
   onClose: () => void;
-  onSubmit: (values: FormValues) => void;
+  onSubmit: (values: DataType) => void;
   formSchema: FormSchema[];
 }
 
 const FormComponent: React.FC<Props> = ({ onClose, onSubmit, formSchema }) => {
   const [form] = useForm();
 
-  const handleSubmit = (values: FormValues) => {
+  const handleSubmit = (values: DataType) => {
     onSubmit(values);
     form.resetFields();
     onClose();
