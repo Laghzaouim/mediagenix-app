@@ -1,4 +1,4 @@
-import FormSchema from "../models/formSchema";
+import FormSchema from '../models/formSchema';
 
 const schema: FormSchema[] = [
   {
