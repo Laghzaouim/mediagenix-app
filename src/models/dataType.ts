@@ -1,5 +1,5 @@
 export default interface DataType {
-  id: string;
+  id?: string;
   title: string;
   type: string;
   startDate: string;

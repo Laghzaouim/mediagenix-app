@@ -3,6 +3,7 @@
 import React from 'react';
 import { Form, Input, Button, Select, DatePicker } from 'antd';
 import SchemaField from '../models/SchemaField';
+import DataType from '../models/dataType';
 
 interface DynamicFormProps {
   schema: SchemaField[];
@@ -11,6 +12,11 @@ interface DynamicFormProps {
 
 const DynamicForm: React.FC<DynamicFormProps> = ({ schema, onSubmit }) => {
   const [form] = Form.useForm();
+  const handleSubmit = (values: DataType) => {
+    onSubmit(values);
+    console.log("🚀 ~ file: DynamicForm.tsx:17 ~ handleSubmit ~ values:", values)
+    form.resetFields();
+  };
 
   const renderField = (field: SchemaField) => {
     const { component, options } = field;
@@ -38,7 +44,7 @@ const DynamicForm: React.FC<DynamicFormProps> = ({ schema, onSubmit }) => {
   };
 
   return (
-    <Form form={form} onFinish={onSubmit}>
+    <Form form={form} onFinish={handleSubmit}>
       {schema.map((field) => (
         <Form.Item
           key={field.name.toString()}

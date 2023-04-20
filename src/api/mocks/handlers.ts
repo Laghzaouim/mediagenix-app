@@ -1,5 +1,5 @@
-// mockAPI.ts
 import { rest } from 'msw';
+import { v4 as uuidv4 } from 'uuid';
 import DataType from '../../models/dataType';
 
 const data: DataType[] = [
@@ -24,5 +24,15 @@ const data: DataType[] = [
 export const handlers = [
   rest.get('/api/data', (req, res, ctx) => {
     return res(ctx.json(data));
+  }),
+
+  rest.post('/api/data', async (req, res, ctx) => {
+    const requestBody = await req.json();
+    const newData = {
+      id: uuidv4(),
+      ...requestBody,
+    };
+    data.push(newData);
+    return res(ctx.status(201), ctx.json(newData));
   }),
 ];
