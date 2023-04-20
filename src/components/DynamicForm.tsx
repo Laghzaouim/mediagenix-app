@@ -1,9 +1,8 @@
-// DynamicForm.tsx
-
 import React from 'react';
 import { Form, Input, Button, Select, DatePicker } from 'antd';
 import SchemaField from '../models/SchemaField';
 import DataType from '../models/dataType';
+import moment from 'moment';
 
 interface DynamicFormProps {
   schema: SchemaField[];
@@ -12,9 +11,20 @@ interface DynamicFormProps {
 
 const DynamicForm: React.FC<DynamicFormProps> = ({ schema, onSubmit }) => {
   const [form] = Form.useForm();
-  const handleSubmit = (values: DataType) => {
-    onSubmit(values);
-    console.log("🚀 ~ file: DynamicForm.tsx:17 ~ handleSubmit ~ values:", values)
+  const handleSubmit = (values: any) => {
+    const [startDate, endDate] = values.startDate.endDate;
+
+    const formattedValues: DataType = {
+      ...values,
+      startDate: moment(startDate).format('YYYY-MM-DD'),
+      endDate: moment(endDate).format('YYYY-MM-DD'),
+    };
+
+    onSubmit(formattedValues);
+    console.log(
+      '🚀 ~ file: DynamicForm.tsx:15 ~ handleSubmit ~ values:',
+      JSON.stringify(formattedValues)
+    );
     form.resetFields();
   };
 

@@ -7,20 +7,17 @@ import useFetchData from './api/useFetchData';
 import { useSubmitData } from './api/useSubmitData';
 import { queryClient } from './api/queryClient';
 import SearchBar from './components/SearchBar';
+import { showToast } from './utils/toast';
 
 function App() {
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const { data, isLoading, error } = useFetchData();
+  const [searchText, setSearchText] = useState('');
+  const { data, isLoading } = useFetchData(searchText);
   const { mutate } = useSubmitData({
     onSuccess: () => {
-      // Handle success, e.g., refetch data, show success message, close the modal
       queryClient.invalidateQueries('data');
       setIsModalVisible(false);
-      console.log('Data saved successfully');
-    },
-    onError: () => {
-      // Handle errors, e.g., show an error message
-      console.error('Error saving data');
+      showToast({ type: 'success', content: 'Data submitted successfully!' });
     },
   });
 
@@ -43,16 +40,8 @@ function App() {
   };
 
   const handleSearch = (searchText: string) => {
-    console.log('🚀 ~ file: App.tsx:46 ~ App ~ searchText:', searchText);
+    setSearchText(searchText);
   };
-
-  if (error) {
-    return <div>Error: {error.message}</div>;
-  }
-
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
 
   return (
     <>
@@ -68,7 +57,11 @@ function App() {
       >
         <DynamicForm schema={SchemaFields} onSubmit={handleSubmit} />
       </Modal>
-      {<DynamicTable schema={SchemaFields} dataSource={data!} />}
+      <DynamicTable
+        schema={SchemaFields}
+        dataSource={data!}
+        isLoading={isLoading}
+      />
     </>
   );
 }
