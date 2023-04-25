@@ -1,6 +1,6 @@
-import SchemaField from '../models/SchemaField';
+import SchemaField from '../models/schemaField';
 
-const SchemaFields: SchemaField[] = [
+const schemaFields: SchemaField[] = [
   {
     name: 'title',
     label: 'Title',
@@ -37,4 +37,4 @@ const SchemaFields: SchemaField[] = [
   },
 ];
 
-export default SchemaFields;
+export default schemaFields;

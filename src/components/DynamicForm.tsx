@@ -1,34 +1,40 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Form, Input, Button, Select, DatePicker } from 'antd';
-import SchemaField from '../models/SchemaField';
+import SchemaField from '../models/schemaField';
 import DataType from '../models/dataType';
-import moment from 'moment';
+import { formatDateToISO } from '../utils/formatDates';
+
+interface FormValues {
+  title: string;
+  type: string;
+  dateRange: [string, string];
+  description: string;
+}
 
 interface DynamicFormProps {
   schema: SchemaField[];
-  onSubmit: (values: any) => void;
+  onSubmit: (values: DataType) => void;
 }
 
 const DynamicForm: React.FC<DynamicFormProps> = ({ schema, onSubmit }) => {
   const [form] = Form.useForm();
-  const handleSubmit = (values: any) => {
-    const [startDate, endDate] = values.startDate.endDate;
+
+  const handleFormSubmit = (values: FormValues) => {
+    const [startDate, endDate] = values.dateRange;
 
     const formattedValues: DataType = {
-      ...values,
-      startDate: moment(startDate).format('YYYY-MM-DD'),
-      endDate: moment(endDate).format('YYYY-MM-DD'),
+      title: values.title,
+      type: values.type,
+      startDate: formatDateToISO(startDate),
+      endDate: formatDateToISO(endDate),
+      description: values.description,
     };
 
     onSubmit(formattedValues);
-    console.log(
-      '🚀 ~ file: DynamicForm.tsx:15 ~ handleSubmit ~ values:',
-      JSON.stringify(formattedValues)
-    );
     form.resetFields();
   };
 
-  const renderField = (field: SchemaField) => {
+  const renderFormComponent = (field: SchemaField) => {
     const { component, options } = field;
 
     switch (component) {
@@ -53,20 +59,27 @@ const DynamicForm: React.FC<DynamicFormProps> = ({ schema, onSubmit }) => {
     }
   };
 
+  const renderedSchemaFields = useMemo(() => {
+    return schema.map((field) => (
+      <Form.Item
+        key={field.name.toString()}
+        label={field.label}
+        name={field.component === 'range_picker' ? 'dateRange' : field.name}
+        rules={[
+          {
+            required: field.required,
+            message: `${field.label} is required`,
+          },
+        ]}
+      >
+        {renderFormComponent(field)}
+      </Form.Item>
+    ));
+  }, [schema]);
+
   return (
-    <Form form={form} onFinish={handleSubmit}>
-      {schema.map((field) => (
-        <Form.Item
-          key={field.name.toString()}
-          label={field.label}
-          name={field.name}
-          rules={[
-            { required: field.required, message: `${field.label} is required` },
-          ]}
-        >
-          {renderField(field)}
-        </Form.Item>
-      ))}
+    <Form form={form} onFinish={handleFormSubmit}>
+      {renderedSchemaFields}
       <Form.Item>
         <Button type='primary' htmlType='submit'>
           Submit
@@ -76,4 +89,4 @@ const DynamicForm: React.FC<DynamicFormProps> = ({ schema, onSubmit }) => {
   );
 };
 
-export default DynamicForm;
+export default React.memo(DynamicForm);

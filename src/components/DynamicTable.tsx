@@ -1,9 +1,9 @@
 import React from 'react';
-import { Table, Spin, Alert } from 'antd';
+import { Table, Spin } from 'antd';
 import { ColumnType } from 'antd/lib/table';
-import SchemaField from '../models/SchemaField';
 import { formatLabel } from '../utils/formatLabel';
 import DataType from '../models/dataType';
+import SchemaField from '../models/schemaField';
 
 interface Props {
   schema: SchemaField[];
@@ -28,7 +28,6 @@ const DynamicTable: React.FC<Props> = ({ schema, dataSource, isLoading }) => {
       key: field.name,
     };
   });
-
 
   return (
     <Spin spinning={isLoading}>

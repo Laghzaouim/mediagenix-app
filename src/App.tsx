@@ -1,6 +1,5 @@
 import DynamicTable from './components/DynamicTable';
 import DynamicForm from './components/DynamicForm';
-import SchemaFields from './schemas/SchemaFields';
 import { useState } from 'react';
 import { Button, Modal } from 'antd';
 import useFetchData from './api/useFetchData';
@@ -8,6 +7,8 @@ import { useSubmitData } from './api/useSubmitData';
 import { queryClient } from './api/queryClient';
 import SearchBar from './components/SearchBar';
 import { showToast } from './utils/toast';
+import schemaFields from './schemas/schemaFields';
+import DataType from './models/dataType';
 
 function App() {
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -29,7 +30,7 @@ function App() {
     setIsModalVisible(false);
   };
 
-  const handleSubmit = async (values: any) => {
+  const handleSubmit = async (values: DataType) => {
     // Perform your HTTP calls for CREATE or UPDATE operations here
     console.log('Form submitted with values:', values);
 
@@ -55,10 +56,10 @@ function App() {
         onCancel={handleCancel}
         footer={null}
       >
-        <DynamicForm schema={SchemaFields} onSubmit={handleSubmit} />
+        <DynamicForm schema={schemaFields} onSubmit={handleSubmit} />
       </Modal>
       <DynamicTable
-        schema={SchemaFields}
+        schema={schemaFields}
         dataSource={data!}
         isLoading={isLoading}
       />
