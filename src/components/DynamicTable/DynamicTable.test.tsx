@@ -1,37 +1,11 @@
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
-import DynamicTable from './DynamicTable';
-import SchemaField from '../models/schemaField';
-import DataType from '../models/dataType';
-
-// Mock data for testing
-const schema: SchemaField[] = [
-  {
-    name: 'title',
-    label: 'Title',
-    component: 'text',
-  },
-  {
-    name: 'type',
-    label: 'Type',
-    component: 'select',
-  },
-  {
-    name: 'startDate',
-    label: 'Start Date',
-    component: 'range_picker',
-  },
-  {
-    name: 'endDate',
-    label: 'End Date',
-    component: 'range_picker',
-  },
-  {
-    name: 'description',
-    label: 'Description',
-    component: 'textarea',
-  },
-];
+import { DynamicTable } from './DynamicTable';
+import AppContext, { AppContextProps } from '../../context/AppContext';
+import { PropsWithChildren } from 'react';
+import { QueryClient, QueryClientProvider } from 'react-query';
+import useFetchData from '../../api/useFetchData';
+import DataType from '../../models/dataType';
 
 const dataSource: DataType[] = [
   {
@@ -52,13 +26,40 @@ const dataSource: DataType[] = [
   },
 ];
 
+jest.mock('../../api/useFetchData');
+
+const mockHandleFormSubmit = jest.fn();
+const mockToggleModal = jest.fn();
+const mockHandleSearch = jest.fn();
+
+const queryClient = new QueryClient();
+
+const wrapper: React.FC<PropsWithChildren> = ({ children }) => {
+  const contextValue: AppContextProps = {
+    isModalVisible: false,
+    toggleModal: mockToggleModal,
+    searchText: '',
+    handleSearch: mockHandleSearch,
+    handleFormSubmit: mockHandleFormSubmit,
+  };
+
+  return (
+    <QueryClientProvider client={queryClient}>
+      <AppContext.Provider value={contextValue}>{children}</AppContext.Provider>
+    </QueryClientProvider>
+  );
+};
+
 describe('DynamicTable', () => {
   test('renders table with correct headers on load', async () => {
-    render(
-      <DynamicTable schema={schema} dataSource={dataSource} isLoading={false} />
-    );
+    (useFetchData as jest.Mock).mockReturnValue({
+      data: [],
+      isLoading: false,
+    });
 
-    expect(await screen.findByText('Title')).toBeInTheDocument()
+    render(<DynamicTable />, { wrapper });
+
+    expect(await screen.findByText('Title')).toBeInTheDocument();
     expect(await screen.findByText('Type')).toBeInTheDocument();
     expect(await screen.findByText('Start Date')).toBeInTheDocument();
     expect(await screen.findByText('End Date')).toBeInTheDocument();
@@ -66,9 +67,12 @@ describe('DynamicTable', () => {
   });
 
   test('table is filled in with the correct data', async () => {
-    render(
-      <DynamicTable schema={schema} dataSource={dataSource} isLoading={false} />
-    );
+    (useFetchData as jest.Mock).mockReturnValue({
+      data: dataSource,
+      isLoading: false,
+    });
+
+    render(<DynamicTable />, { wrapper });
 
     const rows = await screen.findAllByRole('row');
     expect(rows).toHaveLength(3); // 1 header row + 2 data rows

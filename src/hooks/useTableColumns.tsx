@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { ColumnType } from 'antd/lib/table';
-import { formatLabel } from '../utils/formatLabel';
+import { formatLabel } from '../utils/formatLabelUtil';
 import SchemaField from '../models/schemaField';
 
 interface UseTableColumnsProps {

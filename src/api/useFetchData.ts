@@ -1,7 +1,7 @@
 import { useQuery } from 'react-query';
 import DataType from '../models/dataType';
 import axios from 'axios';
-import { showToast } from '../utils/toast';
+import { showToast } from '../utils/toastUtil';
 
 const fetchData = async (search?: string): Promise<DataType[]> => {
   const response = await axios.get('/api/data', {

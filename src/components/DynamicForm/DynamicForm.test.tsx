@@ -1,14 +1,39 @@
 import { render, fireEvent, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
-import DynamicForm from './DynamicForm';
+import { DynamicForm } from './DynamicForm';
 import { format, addDays } from 'date-fns';
-import schemaFields from '../schemas/schemaFields';
-import DataType from '../models/dataType';
+import DataType from '../../models/dataType';
+import AppContext, { AppContextProps } from '../../context/AppContext';
+import { PropsWithChildren } from 'react';
+import { QueryClient, QueryClientProvider } from 'react-query';
+
+const mockHandleFormSubmit = jest.fn();
+const mockToggleModal = jest.fn();
+const mockHandleSearch = jest.fn();
+
+const queryClient = new QueryClient();
+
+const wrapper: React.FC<PropsWithChildren> = ({ children }) => {
+  const contextValue: AppContextProps = {
+    handleFormSubmit: mockHandleFormSubmit,
+    isModalVisible: true,
+    toggleModal: mockToggleModal,
+    searchText: '',
+    handleSearch: mockHandleSearch,
+  };
+
+  return (
+    <QueryClientProvider client={queryClient}>
+      <AppContext.Provider value={contextValue}>{children}</AppContext.Provider>
+    </QueryClientProvider>
+  );
+};
+
+const mockDate = new Date('2023-03-26T00:00:00.000Z');
 
 describe('DynamicTable', () => {
   test('fills in the fields and submits the form', async () => {
-    const onSubmit = jest.fn();
-    render(<DynamicForm schema={schemaFields} onSubmit={onSubmit} />);
+    render(<DynamicForm />, { wrapper });
 
     fireEvent.input(screen.getByLabelText('Title'), {
       target: { value: 'New Event' },
@@ -21,8 +46,8 @@ describe('DynamicTable', () => {
     const rangePicker = screen.getByLabelText('Date');
     fireEvent.mouseDown(rangePicker);
 
-    const startDate = new Date();
-    const endDate = addDays(startDate, 1)
+    const startDate = mockDate;
+    const endDate = addDays(startDate, 1);
 
     const startDateElements = screen
       .getAllByText(startDate.getDate().toString())
@@ -42,7 +67,7 @@ describe('DynamicTable', () => {
 
     fireEvent.click(screen.getByText('Submit'));
 
-    await waitFor(() => expect(onSubmit).toHaveBeenCalledTimes(1));
+    await waitFor(() => expect(mockHandleFormSubmit).toHaveBeenCalledTimes(1));
 
     const expectedData: DataType = {
       title: 'New Event',
@@ -51,18 +76,17 @@ describe('DynamicTable', () => {
       endDate: format(endDate, 'yyyy-MM-dd'),
       description: 'New event description',
     };
-    expect(onSubmit).toHaveBeenCalledWith(expectedData);
+    expect(mockHandleFormSubmit).toHaveBeenCalledWith(expectedData);
   });
 
   test('displays validation errors if required fields are not filled', async () => {
-    const onSubmit = jest.fn();
-    render(<DynamicForm schema={schemaFields} onSubmit={onSubmit} />);
+    render(<DynamicForm />, { wrapper });
 
     fireEvent.click(screen.getByText('Submit'));
 
     expect(await screen.findByText('Title is required')).toBeInTheDocument();
     expect(await screen.findByText('Type is required')).toBeInTheDocument();
     expect(await screen.findByText('Date is required')).toBeInTheDocument();
-    expect(onSubmit).not.toHaveBeenCalled();
+    expect(mockHandleFormSubmit).not.toHaveBeenCalled();
   });
 });

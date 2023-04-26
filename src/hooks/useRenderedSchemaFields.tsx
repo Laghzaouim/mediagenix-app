@@ -24,7 +24,7 @@ export const useRenderedSchemaFields = ({ schema }: UseRenderedSchemaFieldsProps
           </Select>
         );
       case 'range_picker':
-        return <DatePicker.RangePicker />;
+        return <DatePicker.RangePicker  />;
       case 'textarea':
         return <Input.TextArea />;
       default:

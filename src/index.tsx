@@ -1,8 +1,9 @@
 import ReactDOM from 'react-dom/client';
-import {  QueryClientProvider } from 'react-query';
+import { QueryClientProvider } from 'react-query';
 import App from './App';
 import './index.css';
 import { queryClient } from './api/queryClient';
+import AppProvider from './context/AppProvider';
 
 if (process.env.NODE_ENV === 'development') {
   const { worker } = require('./api/mocks/browser');
@@ -14,6 +15,8 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <QueryClientProvider client={queryClient}>
-    <App />
+    <AppProvider>
+      <App />
+    </AppProvider>
   </QueryClientProvider>
 );

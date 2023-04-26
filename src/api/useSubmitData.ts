@@ -1,7 +1,7 @@
 import { useMutation, UseMutationOptions } from 'react-query';
 import axios, { AxiosError } from 'axios';
 import DataType from '../models/dataType';
-import { showToast } from '../utils/toast';
+import { showToast } from '../utils/toastUtil';
 
 export const createData = async (data: DataType) => {
   const response = await axios.post<DataType>('/api/data', data);
