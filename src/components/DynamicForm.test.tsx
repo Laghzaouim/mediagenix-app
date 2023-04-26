@@ -6,7 +6,7 @@ import schemaFields from '../schemas/schemaFields';
 import DataType from '../models/dataType';
 
 describe('DynamicTable', () => {
-  test('fills in the fields, submits the form, and shows a toast message', async () => {
+  test('fills in the fields and submits the form', async () => {
     const onSubmit = jest.fn();
     render(<DynamicForm schema={schemaFields} onSubmit={onSubmit} />);
 
@@ -22,7 +22,7 @@ describe('DynamicTable', () => {
     fireEvent.mouseDown(rangePicker);
 
     const startDate = new Date();
-    const endDate = addDays(startDate, 1);
+    const endDate = addDays(startDate, 1)
 
     const startDateElements = screen
       .getAllByText(startDate.getDate().toString())

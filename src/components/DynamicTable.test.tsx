@@ -58,7 +58,7 @@ describe('DynamicTable', () => {
       <DynamicTable schema={schema} dataSource={dataSource} isLoading={false} />
     );
 
-    expect(await screen.findByText('Title')).toBeInTheDocument();
+    expect(await screen.findByText('Title')).toBeInTheDocument()
     expect(await screen.findByText('Type')).toBeInTheDocument();
     expect(await screen.findByText('Start Date')).toBeInTheDocument();
     expect(await screen.findByText('End Date')).toBeInTheDocument();
