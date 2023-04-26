@@ -2,11 +2,15 @@ import { useMemo } from 'react';
 import { Form, Input, Select, DatePicker } from 'antd';
 import SchemaField from '../models/schemaField';
 
+// Defining a custom hook to render schema fields as form components
 interface UseRenderedSchemaFieldsProps {
   schema: SchemaField[];
 }
 
-export const useRenderedSchemaFields = ({ schema }: UseRenderedSchemaFieldsProps): JSX.Element[] => {
+export const useRenderedSchemaFields = ({
+  schema,
+}: UseRenderedSchemaFieldsProps): JSX.Element[] => {
+  // Defining a function to render the appropriate form component for each schema field
   const renderFormComponent = (field: SchemaField) => {
     const { component, options } = field;
 
@@ -24,7 +28,7 @@ export const useRenderedSchemaFields = ({ schema }: UseRenderedSchemaFieldsProps
           </Select>
         );
       case 'range_picker':
-        return <DatePicker.RangePicker  />;
+        return <DatePicker.RangePicker />;
       case 'textarea':
         return <Input.TextArea />;
       default:
@@ -32,6 +36,7 @@ export const useRenderedSchemaFields = ({ schema }: UseRenderedSchemaFieldsProps
     }
   };
 
+  // Using useMemo to render the schema fields as form components and memoize the result
   const renderedSchemaFields = useMemo(() => {
     return schema.map((field) => (
       <Form.Item

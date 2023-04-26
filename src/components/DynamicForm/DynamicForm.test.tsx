@@ -7,12 +7,13 @@ import AppContext, { AppContextProps } from '../../context/AppContext';
 import { PropsWithChildren } from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 
+// Setting up mock functions and QueryClient instance for testing
 const mockHandleFormSubmit = jest.fn();
 const mockToggleModal = jest.fn();
 const mockHandleSearch = jest.fn();
-
 const queryClient = new QueryClient();
 
+// Creating a wrapper component that provides necessary context and dependencies
 const wrapper: React.FC<PropsWithChildren> = ({ children }) => {
   const contextValue: AppContextProps = {
     handleFormSubmit: mockHandleFormSubmit,
@@ -29,12 +30,14 @@ const wrapper: React.FC<PropsWithChildren> = ({ children }) => {
   );
 };
 
+// Creating a mock date for testing
 const mockDate = new Date('2023-03-26T00:00:00.000Z');
 
 describe('DynamicTable', () => {
   test('fills in the fields and submits the form', async () => {
     render(<DynamicForm />, { wrapper });
 
+    // Simulating user interaction with form fields
     fireEvent.input(screen.getByLabelText('Title'), {
       target: { value: 'New Event' },
     });
@@ -42,7 +45,7 @@ describe('DynamicTable', () => {
     fireEvent.mouseDown(screen.getByLabelText('Type'));
     fireEvent.click(screen.getByText('Holiday'));
 
-    // Simulate user interaction with the RangePicker component
+    // Simulating user interaction with the RangePicker component
     const rangePicker = screen.getByLabelText('Date');
     fireEvent.mouseDown(rangePicker);
 
@@ -67,6 +70,7 @@ describe('DynamicTable', () => {
 
     fireEvent.click(screen.getByText('Submit'));
 
+    // Checking if the form data is submitted correctly
     await waitFor(() => expect(mockHandleFormSubmit).toHaveBeenCalledTimes(1));
 
     const expectedData: DataType = {
@@ -82,8 +86,10 @@ describe('DynamicTable', () => {
   test('displays validation errors if required fields are not filled', async () => {
     render(<DynamicForm />, { wrapper });
 
+    // Simulating user clicking the submit button without filling in required fields
     fireEvent.click(screen.getByText('Submit'));
 
+    // Checking if the validation errors are displayed
     expect(await screen.findByText('Title is required')).toBeInTheDocument();
     expect(await screen.findByText('Type is required')).toBeInTheDocument();
     expect(await screen.findByText('Date is required')).toBeInTheDocument();

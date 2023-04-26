@@ -13,6 +13,7 @@ interface FormValues {
   description: string;
 }
 
+// Functional component that renders a dynamic form using antd components and the useRenderedSchemaFields hook
 export const DynamicForm: React.FC = () => {
   const [form] = Form.useForm();
   const { handleFormSubmit, isModalVisible, toggleModal } =
@@ -33,6 +34,7 @@ export const DynamicForm: React.FC = () => {
     form.resetFields();
   };
 
+  // Using the useRenderedSchemaFields hook to render the form fields based on the schemaFields object
   const renderedSchemaFields = useRenderedSchemaFields({
     schema: schemaFields,
   });

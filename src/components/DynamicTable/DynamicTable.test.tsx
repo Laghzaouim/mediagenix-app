@@ -7,6 +7,7 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import useFetchData from '../../api/useFetchData';
 import DataType from '../../models/dataType';
 
+// Setting up mock data and functions for testing
 const dataSource: DataType[] = [
   {
     id: '1',
@@ -25,15 +26,13 @@ const dataSource: DataType[] = [
     description: 'Test 2 description',
   },
 ];
-
 jest.mock('../../api/useFetchData');
-
 const mockHandleFormSubmit = jest.fn();
 const mockToggleModal = jest.fn();
 const mockHandleSearch = jest.fn();
-
 const queryClient = new QueryClient();
 
+// Creating a wrapper component that provides necessary context and dependencies
 const wrapper: React.FC<PropsWithChildren> = ({ children }) => {
   const contextValue: AppContextProps = {
     isModalVisible: false,
@@ -52,6 +51,7 @@ const wrapper: React.FC<PropsWithChildren> = ({ children }) => {
 
 describe('DynamicTable', () => {
   test('renders table with correct headers on load', async () => {
+    // Setting up mock data for useFetchData hook
     (useFetchData as jest.Mock).mockReturnValue({
       data: [],
       isLoading: false,
@@ -59,6 +59,7 @@ describe('DynamicTable', () => {
 
     render(<DynamicTable />, { wrapper });
 
+    // Checking if the table headers are displayed
     expect(await screen.findByText('Title')).toBeInTheDocument();
     expect(await screen.findByText('Type')).toBeInTheDocument();
     expect(await screen.findByText('Start Date')).toBeInTheDocument();
@@ -67,6 +68,7 @@ describe('DynamicTable', () => {
   });
 
   test('table is filled in with the correct data', async () => {
+    // Setting up mock data for useFetchData hook
     (useFetchData as jest.Mock).mockReturnValue({
       data: dataSource,
       isLoading: false,
@@ -74,17 +76,18 @@ describe('DynamicTable', () => {
 
     render(<DynamicTable />, { wrapper });
 
+    // Checking if the table has the correct number of rows
     const rows = await screen.findAllByRole('row');
     expect(rows).toHaveLength(3); // 1 header row + 2 data rows
 
-    // Check the first data row
+    // Checking the data in the first data row
     expect(screen.getByText('Test 1')).toBeInTheDocument();
     expect(screen.getByText('A')).toBeInTheDocument();
     expect(screen.getByText('2023-04-01')).toBeInTheDocument();
     expect(screen.getByText('2023-04-30')).toBeInTheDocument();
     expect(screen.getByText('Test 1 description')).toBeInTheDocument();
 
-    // Check the second data row
+    // Checking the data in the second data row
     expect(screen.getByText('Test 2')).toBeInTheDocument();
     expect(screen.getByText('B')).toBeInTheDocument();
     expect(screen.getByText('2023-04-15')).toBeInTheDocument();
