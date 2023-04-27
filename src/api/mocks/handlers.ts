@@ -13,12 +13,14 @@ export const handlers = [
     const filteredData = !isNullOrUndefinedOrEmpty(search)
       ? mockData.filter(
           (item) =>
-            item.title
-              .toLowerCase()
-              .includes(search?.toLowerCase() as string) ||
-            item.description
-              .toLowerCase()
-              .includes(search?.toLowerCase() as string)
+            (item.title &&
+              item.title
+                .toLowerCase()
+                .includes((search ?? '').toLowerCase())) ||
+            (item.description &&
+              item.description
+                .toLowerCase()
+                .includes((search ?? '').toLowerCase()))
         )
       : mockData;
 
